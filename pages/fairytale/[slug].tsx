@@ -53,7 +53,7 @@ const FairtalePage = ({ fairytale }: PageProps) => {
     // Add your code here
     generateNewStoryImage()
   }
-
+  console.log(storyImage)
   return (
     <main className="p-10">
       <h1>{title}</h1>
