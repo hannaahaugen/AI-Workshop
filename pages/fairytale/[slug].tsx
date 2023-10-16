@@ -15,7 +15,7 @@ interface Query {
 
 const FairtalePage = ({ fairytale }: PageProps) => {
   // destructure the fairytale object
-  const { title } = fairytale
+  const { title, story } = fairytale
 
   const [storyImage, setStoryImage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -26,17 +26,38 @@ const FairtalePage = ({ fairytale }: PageProps) => {
     // The response is a JSON object with a text property
     // Set the storyImage state to the text property of the response object
     // If the response object does not have a text property, log an error to the console
-
-    const prompt = `I am a placeholder prompt, I should be replaced with something more interesting`
+    try {
+      setIsLoading(true)
+      const response = await fetch('/api/openai-image', {
+        method: 'POST',
+        body: JSON.stringify({
+          prompt: story,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      if (data.text) {
+        setStoryImage(data.text)
+      } else {
+        console.log('error')
+      }
+      setIsLoading(false)
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 
   const handleGenerateImage = async () => {
     // Add your code here
+    generateNewStoryImage()
   }
 
   return (
     <main className="p-10">
       <h1>{title}</h1>
+      <p>{story}</p>
       <button
         className="m-5 rounded-md bg-slate-500 px-2"
         onClick={handleGenerateImage}
