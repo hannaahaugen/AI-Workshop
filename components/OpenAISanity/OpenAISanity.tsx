@@ -31,11 +31,40 @@ const OpenAISanity = (props: StringInputProps) => {
     /**
      * See code example on landing page
      */
-    alert('You need to implement this function')
+    setIsLoading(true)
+    fetch('/api/openai', {
+      method: 'POST',
+      body: JSON.stringify({
+        prompt: promt,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.text) {
+          onChange(data.text ? set(data.text) : unset())
+        } else {
+          console.log('error')
+        }
+        console.log(data)
+        // onChange(data.text)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
   }
 
   const generateStory = async () => {
     // Here you can call the function callApi() you just wrote and handle some errors
+    if (!promt) return
+    try {
+      callApi()
+    } catch (error) {
+      console.log('error', error)
+    }
   }
 
   return (
